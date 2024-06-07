@@ -13,10 +13,10 @@ elseif (APPLE)
     set(CMAKE_CXX_FLAGS "-framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo -std=c++11")
 
     include_directories(${PROJECT_SOURCE_DIR}/Dependencies/GLFW/include)
-    link_directories(${PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-x86_64)
+    link_directories(${PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-arm64)
 
-    include_directories(/usr/local/Cellar/glew/2.2.0_1/include)
-    link_directories(/usr/local/Cellar/glew/2.2.0_1/lib)
+    include_directories(/opt/homebrew/Cellar/glew/2.2.0_1/include)
+    link_directories(/opt/homebrew/Cellar/glew/2.2.0_1/lib)
 endif ()
 
 set(SOURCE_FILES OpenGL/src/Application.cpp)

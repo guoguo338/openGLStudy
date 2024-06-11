@@ -1,6 +1,7 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "application/application.h">
 #include "wrapper/checkError.h"
 
 using namespace std;
@@ -42,6 +43,8 @@ void keyCallBack(GLFWwindow * window, int key, int scancode, int action, int mod
 
 int main(void)
 {
+    app->test();
+
     GLFWwindow* window;
 
     /* Initialize the library */

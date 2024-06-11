@@ -11,8 +11,9 @@ include_directories(${PROJECT_SOURCE_DIR})
 link_directories(${PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-arm64)
 
 add_subdirectory(wrapper)
+add_subdirectory(application)
 
-set(SOURCE_FILES OpenGL/src/Application.cpp Dependencies/glad/src/glad.c)
+set(SOURCE_FILES OpenGL/src/main.cpp Dependencies/glad/src/glad.c)
 add_executable(Clion-OpenGL ${SOURCE_FILES})
 
-target_link_libraries(Clion-OpenGL glfw3 wrapper)
+target_link_libraries(Clion-OpenGL glfw3 wrapper app)

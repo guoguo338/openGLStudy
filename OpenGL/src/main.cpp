@@ -56,6 +56,43 @@ void prepare() {
     GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
 }
 
+void prepareSingleBuffer() {
+    float positions[] = {
+            -0.5f, -0.5f, 0.0f,
+            0.5f, -0.5f, 0.0f,
+            -0.0f, 0.5f, 0.0f
+    };
+
+    float colors[] = {
+            1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 1.0f
+    };
+
+    GLuint posVbo = 0;
+    GL_CALL(glGenBuffers(1, &posVbo));
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, posVbo));
+    GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW));
+
+    GLuint colorVbo = 0;
+    GL_CALL(glGenBuffers(1, &colorVbo));
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, colorVbo));
+    GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW));
+}
+
+void prepareInterleavedBuffer() {
+    float vertices[] = {
+            -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+            0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+    GLuint vbo = 0;
+    GL_CALL(glGenBuffers(1, &vbo));
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+    GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+}
+
 int main(void)
 {
     if (!app->init(800, 600)) {
@@ -68,7 +105,7 @@ int main(void)
     GL_CALL(glViewport(0, 0, 800, 600));
     GL_CALL(glClearColor(0.2f, 0.3f, 0.3f, 10.f));
 
-    prepare();
+    prepareInterleavedBuffer();
 
     /* Loop until the user closes the window */
     while (app->update())

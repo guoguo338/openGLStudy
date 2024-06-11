@@ -64,16 +64,17 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    /* load GL */
-    gladLoadGL();
-
     /* set current window size chagne listener */
     glfwSetFramebufferSizeCallback(window, frameBuffferSizeCallback);
 
     /* set current keyboard listener */
     glfwSetKeyCallback(window, keyCallBack);
 
-    std::cout << glGetString(GL_VERSION) << std::endl;
+    // Load all openGL functions of current version
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)){
+        cout << "Failed to initialize GLAD" << endl;
+        return -1;
+    }
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

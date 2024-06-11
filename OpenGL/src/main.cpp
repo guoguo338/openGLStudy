@@ -80,21 +80,21 @@ void prepareSingleBuffer() {
     GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW));
 
     GLuint vao = 0;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    GL_CALL(glGenVertexArrays(1, &vao));
+    GL_CALL(glBindVertexArray(vao));
 
     // pos bind to vao
-    glBindBuffer(GL_ARRAY_BUFFER, posVbo);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, posVbo));
+    GL_CALL(glEnableVertexAttribArray(0));
+    GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
 
     // color bind to vao
-    glBindBuffer(GL_ARRAY_BUFFER, posVbo);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, posVbo));
+    GL_CALL(glEnableVertexAttribArray(1));
+    GL_CALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
 
     // unbind vao
-    glBindVertexArray(0);
+    GL_CALL(glBindVertexArray(0));
 }
 
 void prepareInterleavedBuffer() {
@@ -108,9 +108,21 @@ void prepareInterleavedBuffer() {
     GL_CALL(glGenBuffers(1, &vbo));
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
     GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+
+    GLuint vao = 0;
+    GL_CALL(glGenVertexArrays(1, &vao));
+    GL_CALL(glBindVertexArray(vao));
+
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+    GL_CALL(glEnableVertexAttribArray(0));
+    GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0));
+
+    GL_CALL(glEnableVertexAttribArray(1));
+    GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float))));
+
+    // unbind vao
+    GL_CALL(glBindVertexArray(0));
 }
-
-
 
 int main(void)
 {
@@ -124,7 +136,7 @@ int main(void)
     GL_CALL(glViewport(0, 0, 800, 600));
     GL_CALL(glClearColor(0.2f, 0.3f, 0.3f, 10.f));
 
-    prepareSingleBuffer();
+    prepareInterleavedBuffer();
 
     /* Loop until the user closes the window */
     while (app->update())

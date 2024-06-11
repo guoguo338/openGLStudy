@@ -124,6 +124,70 @@ void prepareInterleavedBuffer() {
     GL_CALL(glBindVertexArray(0));
 }
 
+void prepareShader(){
+    const char* vertexShaderSource =
+            "#version 410 core\n"
+            "layout (location = 0) in vec3 aPos;\n"
+            "void main()\n"
+            "{\n"
+            "    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+            "}\0";
+
+    const char* fragmentShaderSource =
+            "#version 330 core\n"
+            "out vec4 FragColor;\n"
+            "void main()\n"
+            "{\n"
+            "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+            "}\n\0";
+
+    // create shader program (vs、fs)
+    GLuint vertex, fragment;
+    vertex = glCreateShader(GL_VERTEX_SHADER);
+    fragment = glCreateShader(GL_FRAGMENT_SHADER);
+
+    // input shader code
+    glShaderSource(vertex, 1, &vertexShaderSource, NULL);
+    glShaderSource(fragment, 1, &fragmentShaderSource, NULL);
+
+    int success = 0;
+    char infoLog[1024];
+    // compile shader code
+    glCompileShader(vertex);
+    glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(vertex, 1024, NULL, infoLog);
+        cout << "Error: SHADER COMPILE ERROR --VERTEX" << "\n" << infoLog << endl;
+    }
+
+    glCompileShader(fragment);
+    glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(fragment, 1024, NULL, infoLog);
+        cout << "Error: SHADER COMPILE ERROR --FRAGMENT" << "\n" << infoLog << endl;
+    }
+
+    // create a program
+    GLuint program = 0;
+    program = glCreateProgram();
+
+    // put the compiled result of vs & fs to program
+    glAttachShader(program, vertex);
+    glAttachShader(program, fragment);
+
+    // execute program, and create the executable shader
+    glLinkProgram(program);
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(program, 1024, NULL, infoLog);
+        cout << "Error: SHADER LINK ERROR " << "\n" << infoLog << endl;
+    }
+
+    // clean up
+    glDeleteShader(vertex);
+    glDeleteShader(fragment);
+}
+
 int main(void)
 {
     if (!app->init(800, 600)) {
@@ -136,6 +200,7 @@ int main(void)
     GL_CALL(glViewport(0, 0, 800, 600));
     GL_CALL(glClearColor(0.2f, 0.3f, 0.3f, 10.f));
 
+    prepareShader();
     prepareInterleavedBuffer();
 
     /* Loop until the user closes the window */

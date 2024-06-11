@@ -44,6 +44,10 @@ bool Application::init(const int &width, const int &height) {
         return false;
     }
 
+    glfwSetFramebufferSizeCallback(mWindow, framebufferSizeCallback);
+
+    glfwSetWindowUserPointer(mWindow, this);
+
     return true;
 }
 
@@ -65,4 +69,11 @@ void Application::destroy() {
     glfwDestroyWindow(mWindow);
     mWindow = nullptr;
     glfwTerminate();
+}
+
+void Application::framebufferSizeCallback(GLFWwindow *window, int width, int height) {
+    Application *self = (Application *)glfwGetWindowUserPointer(window);
+    if (self->mResizeCallback != nullptr) {
+        self->mResizeCallback(width, height);
+    }
 }

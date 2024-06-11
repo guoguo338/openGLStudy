@@ -15,10 +15,10 @@ void printGLFWError() {
 }
 
 // declear a function to respond window resize
-void frameBuffferSizeCallback(GLFWwindow * window, int width, int height)
+void onResize(int width, int height)
 {
-//    cout << "window current size : " << width << ", " << height << endl;
-    glViewport(0, 0, width, height);
+    cout << "onResize" << endl;
+    GL_CALL(glViewport(0, 0, width, height));
 }
 
 // declear a keyboard response function
@@ -46,10 +46,8 @@ int main(void)
     if (!app->init(800, 600)) {
         return -1;
     }
+    app->setResizeCallback(onResize);
 
-//    /* set current window size chagne listener */
-//    glfwSetFramebufferSizeCallback(window, frameBuffferSizeCallback);
-//
 //    /* set current keyboard listener */
 //    glfwSetKeyCallback(window, keyCallBack);
 

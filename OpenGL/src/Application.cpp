@@ -1,10 +1,11 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "wrapper/checkError.h"
 
 using namespace std;
 
-void printError() {
+void printGLFWError() {
     const char* description;
     int error_code = glfwGetError(&description);
     if (error_code != GLFW_NO_ERROR) {
@@ -15,7 +16,8 @@ void printError() {
 // declear a function to respond window resize
 void frameBuffferSizeCallback(GLFWwindow * window, int width, int height)
 {
-    cout << "window current size : " << width << ", " << height << endl;
+//    cout << "window current size : " << width << ", " << height << endl;
+    glViewport(0, 0, width, height);
 }
 
 // declear a keyboard response function
@@ -56,7 +58,7 @@ int main(void)
     window = glfwCreateWindow(640, 480, "OpenGLStudy", NULL, NULL);
     if (!window)
     {
-        printError();
+        printGLFWError();
         glfwTerminate();
         return -1;
     }
@@ -76,11 +78,20 @@ int main(void)
         return -1;
     }
 
+    // Set openGL view port and clear color
+    GL_CALL(glViewport(0, 0, 800, 600));
+    GL_CALL(glClearColor(0.2f, 0.3f, 0.3f, 10.f));
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Poll for and process events */
         glfwPollEvents();
+
+        // clear buffer
+        GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
+
+        glfwSwapBuffers(window);
     }
 
     // Clean up and exit

@@ -6,13 +6,6 @@
 
 using namespace std;
 
-void printGLFWError() {
-    const char* description;
-    int error_code = glfwGetError(&description);
-    if (error_code != GLFW_NO_ERROR) {
-        fprintf(stderr, "GLFW error (%d): %s\n", error_code, description);
-    }
-}
 
 // declear a function to respond window resize
 void onResize(int width, int height)
@@ -22,7 +15,7 @@ void onResize(int width, int height)
 }
 
 // declear a keyboard response function
-void keyCallBack(GLFWwindow * window, int key, int scancode, int action, int modes)
+void onKey(int key, int action, int modes)
 {
     if (key == GLFW_KEY_W) {
         cout << "pressed: " << "w" << endl;
@@ -47,9 +40,7 @@ int main(void)
         return -1;
     }
     app->setResizeCallback(onResize);
-
-//    /* set current keyboard listener */
-//    glfwSetKeyCallback(window, keyCallBack);
+    app->setKeyCallBack(onKey);
 
     // Set openGL view port and clear color
     GL_CALL(glViewport(0, 0, 800, 600));

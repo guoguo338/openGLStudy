@@ -8,6 +8,7 @@ using namespace std;
 class GLFWwindow;
 
 using ResizeCallback = void(*)(int width, int height);
+using KeyCallBack = void(*)(int key, int action, int modes);
 
 class Application {
 public:
@@ -22,8 +23,10 @@ public:
     void destroy();
 
     void setResizeCallback(ResizeCallback callback) {mResizeCallback = callback;}
+    void setKeyCallBack(KeyCallBack callback) {mKeyCallBack = callback;}
 
     static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
+    static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int modes);
 
     uint32_t getWidth() const {return mWidth;}
     uint32_t getHeight() const {return mHeight;}
@@ -35,5 +38,6 @@ private:
     GLFWwindow *mWindow{nullptr};
 
     ResizeCallback mResizeCallback;
+    KeyCallBack mKeyCallBack;
     Application();
 };

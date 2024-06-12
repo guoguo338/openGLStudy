@@ -75,14 +75,18 @@ void prepareSingleBuffer() {
     GL_CALL(glGenVertexArrays(1, &vao));
     GL_CALL(glBindVertexArray(vao));
 
+    // Get index dynamically
+    GLuint colorLocation = glGetAttribLocation(shader->mProgram, "aColor");
+    GLuint posLocation = glGetAttribLocation(shader->mProgram, "aPos");
+
     // VAO bidings
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vboIndex));
     GL_CALL(glEnableVertexAttribArray(0));
-    GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
+    GL_CALL(glVertexAttribPointer(posLocation, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
 
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vboColor));
     GL_CALL(glEnableVertexAttribArray(1));
-    GL_CALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
+    GL_CALL(glVertexAttribPointer(colorLocation, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
 
     GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
 

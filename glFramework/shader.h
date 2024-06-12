@@ -16,7 +16,7 @@ private:
     // type: compile link
     void checkShaderErrors(GLuint target, const std::string type);
 
-private:
+public:
     GLuint mProgram { 0 };
 
 };

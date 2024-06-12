@@ -41,25 +41,40 @@ void prepareSingleBuffer() {
             0.5f, -0.5f, 0.0f,
             -0.0f, 0.5f, 0.0f,
             0.5f, 0.5f,0.0f,
-            0.8f,   0.8f,   0.0f,
-            0.8f,   0.0f,   0.0f
     };
 
+    unsigned int indices[] = {
+            0, 1, 2,
+            2, 1, 3
+    };
+
+    // VBO
     GLuint vbo = 0;
     GL_CALL(glGenBuffers(1, &vbo));
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
     GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW));
 
+    // EBO
+    GLuint ebo = 0;
+    GL_CALL(glGenBuffers(1, &ebo));
+    GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
+    GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
+
+    // VAO
     GL_CALL(glGenVertexArrays(1, &vao));
     GL_CALL(glBindVertexArray(vao));
 
+    // VAO bidings
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
     GL_CALL(glEnableVertexAttribArray(0));
     GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
 
+    GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
+
     // unbind vao
     glBindVertexArray(0);
 }
+
 void prepareInterleavedBuffer() {
     float vertices[] = {
             -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,

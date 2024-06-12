@@ -11,6 +11,8 @@ public:
     void begin(); // begin use shader
     void end(); // end use shadr
 
+    void setFloat(const std::string& name, float value);
+
 private:
     // shader program
     // type: compile link

@@ -91,7 +91,7 @@ void prepareSingleBuffer() {
     GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
 
     // unbind vao
-    glBindVertexArray(0);
+    GL_CALL(glBindVertexArray(0));
 }
 
 void prepareInterleavedBuffer() {
@@ -130,6 +130,8 @@ void render() {
 
     // 1. bind current program
     shader->begin();
+
+    shader->setFloat("time", glfwGetTime());
 
     // 2. bind current vao
     GL_CALL(glBindVertexArray(vao));

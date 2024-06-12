@@ -68,7 +68,6 @@ void prepareSingleBuffer() {
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
     GL_CALL(glEnableVertexAttribArray(0));
     GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
-
     GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
 
     // unbind vao
@@ -176,7 +175,8 @@ void render() {
     GL_CALL(glBindVertexArray(vao));
 
     // 3. send draw call
-    GL_CALL(glDrawArrays(GL_TRIANGLES, 0, 6));
+//    GL_CALL(glDrawArrays(GL_TRIANGLES, 0, 6));
+    GL_CALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
 
 int main(void)

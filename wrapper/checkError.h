@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+using namespace std;
 
 #ifdef DEBUG
 #define GL_CALL(x) do { \

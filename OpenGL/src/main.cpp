@@ -1,6 +1,6 @@
 #include <iostream>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "glFramework/core.h"
+#include "glFramework/shader.h"
 #include "application/application.h"
 #include "wrapper/checkError.h"
 

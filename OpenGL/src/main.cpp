@@ -43,16 +43,26 @@ void prepareSingleBuffer() {
             0.5f, 0.5f,0.0f,
     };
 
+    float colors[] = {
+            1.0f, 0.0f, 0.0f,
+            0.0f,   1.0f,   0.0f,
+            0.0f,   0.0f,   1.0f
+    };
+
     unsigned int indices[] = {
             0, 1, 2,
-            2, 1, 3
     };
 
     // VBO
-    GLuint vbo = 0;
-    GL_CALL(glGenBuffers(1, &vbo));
-    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+    GLuint vboIndex = 0;
+    GL_CALL(glGenBuffers(1, &vboIndex));
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vboIndex));
     GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW));
+
+    GLuint vboColor = 0;
+    GL_CALL(glGenBuffers(1, &vboColor));
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vboColor));
+    GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW));
 
     // EBO
     GLuint ebo = 0;
@@ -65,9 +75,14 @@ void prepareSingleBuffer() {
     GL_CALL(glBindVertexArray(vao));
 
     // VAO bidings
-    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vboIndex));
     GL_CALL(glEnableVertexAttribArray(0));
     GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
+
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vboColor));
+    GL_CALL(glEnableVertexAttribArray(1));
+    GL_CALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
+
     GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
 
     // unbind vao
@@ -104,17 +119,21 @@ void prepareShader(){
     const char* vertexShaderSource =
             "#version 410 core\n"
             "layout (location = 0) in vec3 aPos;\n"
+            "layout (location = 1) in vec3 aColor;\n"
+            "out vec3 color;"
             "void main()\n"
             "{\n"
             "    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+            "    color = aColor;\n"
             "}\0";
 
     const char* fragmentShaderSource =
             "#version 410 core\n"
             "out vec4 FragColor;\n"
+            "in vec3 color;\n"
             "void main()\n"
             "{\n"
-            "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+            "    FragColor = vec4(color, 1.0f);\n"
             "}\n\0";
 
     // create shader program (vs、fs)
@@ -175,7 +194,7 @@ void render() {
     GL_CALL(glBindVertexArray(vao));
 
     // 3. send draw call
-//    GL_CALL(glDrawArrays(GL_TRIANGLES, 0, 6));
+//    GL_CALL(glDrawArrays(GL_TRIANGLES, 0, 3));
     GL_CALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
 
@@ -192,6 +211,7 @@ int main(void)
     GL_CALL(glClearColor(0.2f, 0.3f, 0.3f, 1.0f));
 
     prepareShader();
+//    prepareInterleavedBuffer();
     prepareSingleBuffer();
 
     /* Loop until the user closes the window */

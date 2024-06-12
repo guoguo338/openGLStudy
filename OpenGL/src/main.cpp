@@ -35,6 +35,31 @@ void onKey(int key, int action, int modes)
     }
 }
 
+void prepareSingleBuffer() {
+    float positions[] = {
+            -0.5f, -0.5f, 0.0f,
+            0.5f, -0.5f, 0.0f,
+            -0.0f, 0.5f, 0.0f,
+            0.5f, 0.5f,0.0f,
+            0.8f,   0.8f,   0.0f,
+            0.8f,   0.0f,   0.0f
+    };
+
+    GLuint vbo = 0;
+    GL_CALL(glGenBuffers(1, &vbo));
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+    GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW));
+
+    GL_CALL(glGenVertexArrays(1, &vao));
+    GL_CALL(glBindVertexArray(vao));
+
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+    GL_CALL(glEnableVertexAttribArray(0));
+    GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
+
+    // unbind vao
+    glBindVertexArray(0);
+}
 void prepareInterleavedBuffer() {
     float vertices[] = {
             -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
@@ -136,7 +161,7 @@ void render() {
     GL_CALL(glBindVertexArray(vao));
 
     // 3. send draw call
-    GL_CALL(glDrawArrays(GL_TRIANGLES, 0, 3));
+    GL_CALL(glDrawArrays(GL_TRIANGLES, 0, 6));
 }
 
 int main(void)
@@ -152,7 +177,7 @@ int main(void)
     GL_CALL(glClearColor(0.2f, 0.3f, 0.3f, 1.0f));
 
     prepareShader();
-    prepareInterleavedBuffer();
+    prepareSingleBuffer();
 
     /* Loop until the user closes the window */
     while (app->update())

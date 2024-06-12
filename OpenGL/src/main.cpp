@@ -6,7 +6,8 @@
 
 using namespace std;
 
-GLuint program = 0, vao = 0;
+GLuint vao = 0;
+Shader *shader = nullptr;
 
 // declear a function to respond window resize
 void onResize(int width, int height)
@@ -116,71 +117,7 @@ void prepareInterleavedBuffer() {
 }
 
 void prepareShader(){
-    const char* vertexShaderSource =
-            "#version 410 core\n"
-            "layout (location = 0) in vec3 aPos;\n"
-            "layout (location = 1) in vec3 aColor;\n"
-            "out vec3 color;"
-            "void main()\n"
-            "{\n"
-            "    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-            "    color = aColor;\n"
-            "}\0";
-
-    const char* fragmentShaderSource =
-            "#version 410 core\n"
-            "out vec4 FragColor;\n"
-            "in vec3 color;\n"
-            "void main()\n"
-            "{\n"
-            "    FragColor = vec4(color, 1.0f);\n"
-            "}\n\0";
-
-    // create shader program (vs、fs)
-    GLuint vertex, fragment;
-
-    vertex = glCreateShader(GL_VERTEX_SHADER);
-    fragment = glCreateShader(GL_FRAGMENT_SHADER);
-
-    // input shader code
-    GL_CALL(glShaderSource(vertex, 1, &vertexShaderSource, NULL));
-    GL_CALL(glShaderSource(fragment, 1, &fragmentShaderSource, NULL));
-
-    int success = 0;
-    char infoLog[1024];
-    // compile shader code
-    GL_CALL(glCompileShader(vertex));
-    GL_CALL(glGetShaderiv(vertex, GL_COMPILE_STATUS, &success));
-    if (!success) {
-        GL_CALL(glGetShaderInfoLog(vertex, 1024, NULL, infoLog));
-        cout << "Error: SHADER COMPILE ERROR --VERTEX" << "\n" << infoLog << endl;
-    }
-
-    GL_CALL(glCompileShader(fragment));
-    GL_CALL(glGetShaderiv(fragment, GL_COMPILE_STATUS, &success));
-    if (!success) {
-        GL_CALL(glGetShaderInfoLog(fragment, 1024, NULL, infoLog));
-        cout << "Error: SHADER COMPILE ERROR --FRAGMENT" << "\n" << infoLog << endl;
-    }
-
-    // create a program
-    program = glCreateProgram();
-
-    // put the compiled result of vs & fs to program
-    GL_CALL(glAttachShader(program, vertex));
-    GL_CALL(glAttachShader(program, fragment));
-
-    // execute program, and create the executable shader
-    GL_CALL(glLinkProgram(program));
-    GL_CALL(glGetProgramiv(program, GL_LINK_STATUS, &success));
-    if (!success) {
-        GL_CALL(glGetProgramInfoLog(program, 1024, NULL, infoLog));
-        cout << "Error: SHADER LINK ERROR " << "\n" << infoLog << endl;
-    }
-
-    // clean up
-    GL_CALL(glDeleteShader(vertex));
-    GL_CALL(glDeleteShader(fragment));
+    shader = new Shader("assets/shaders/vertex.glsl", "assets/shaders/fragment.glsl");
 }
 
 void render() {
@@ -188,7 +125,7 @@ void render() {
     GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
 
     // 1. bind current program
-    GL_CALL(glUseProgram(program));
+    shader->begin();
 
     // 2. bind current vao
     GL_CALL(glBindVertexArray(vao));
@@ -196,6 +133,9 @@ void render() {
     // 3. send draw call
 //    GL_CALL(glDrawArrays(GL_TRIANGLES, 0, 3));
     GL_CALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+    GL_CALL(glBindVertexArray(0));
+
+    shader->end();
 }
 
 int main(void)

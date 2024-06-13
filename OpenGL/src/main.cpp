@@ -53,6 +53,12 @@ void prepareSingleBuffer() {
             0.0f,   0.0f,   1.0f
     };
 
+    float uvs[] = {
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            0.5f, 1.0f,
+    };
+
     unsigned int indices[] = {
             0, 1, 2,
     };
@@ -68,6 +74,11 @@ void prepareSingleBuffer() {
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vboColor));
     GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW));
 
+    GLuint vboUV = 0;
+    glGenBuffers(1, &vboUV);
+    glBindBuffer(GL_ARRAY_BUFFER, vboUV);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(uvs), uvs, GL_STATIC_DRAW);
+
     // EBO
     GLuint ebo = 0;
     GL_CALL(glGenBuffers(1, &ebo));
@@ -78,18 +89,18 @@ void prepareSingleBuffer() {
     GL_CALL(glGenVertexArrays(1, &vao));
     GL_CALL(glBindVertexArray(vao));
 
-    // Get index dynamically
-    GLuint colorLocation = glGetAttribLocation(shader->mProgram, "aColor");
-    GLuint posLocation = glGetAttribLocation(shader->mProgram, "aPos");
-
     // VAO bidings
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vboIndex));
     GL_CALL(glEnableVertexAttribArray(0));
-    GL_CALL(glVertexAttribPointer(posLocation, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
+    GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
 
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vboColor));
     GL_CALL(glEnableVertexAttribArray(1));
-    GL_CALL(glVertexAttribPointer(colorLocation, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
+    GL_CALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0));
+
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vboUV));
+    GL_CALL(glEnableVertexAttribArray(2));
+    GL_CALL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void *)0));
 
     GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
 
@@ -136,17 +147,30 @@ void prepareTexture() {
     unsigned char * data = stbi_load("assets/textures/caoshen.jpeg", &width, &height, &channels, STBI_rgb_alpha);
 
     // generate texture and activate unit
-    glGenTextures(1, &texture);
+    GL_CALL(glGenTextures(1, &texture));
     // activate texture unit
-    glActiveTexture(GL_TEXTURE0);
+    GL_CALL(glActiveTexture(GL_TEXTURE0));
     // bind texture object
-    glBindTexture(GL_TEXTURE_2D, texture);
-
+    GL_CALL(glBindTexture(GL_TEXTURE_2D, texture));
     // transfer texture data
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    if (data) {
+        GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
+        // generate mipmap
+        GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
+    } else {
+        std::cerr << "Failed to load texture" << std::endl;
+    }
 
     // release data
     stbi_image_free(data);
+
+    // Set texture filter pattern
+    GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+
+    // Set texture package pattern
+    GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+    GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT));
 }
 
 void render() {
@@ -162,7 +186,9 @@ void render() {
     float color[] = {0.9, 0.3, 0.25};
     shader->setVector3("uColor", color);
 
-    // 2. bind current vaoe
+    shader->setInt("sampler", 0);
+
+    // 2. bind current vao
     GL_CALL(glBindVertexArray(vao));
 
     // 3. send draw call
@@ -185,10 +211,9 @@ int main(void)
     GL_CALL(glViewport(0, 0, 800, 600));
     GL_CALL(glClearColor(0.2f, 0.3f, 0.3f, 1.0f));
 
-    prepareShader();
     prepareTexture();
-//    prepareInterleavedBuffer();
     prepareSingleBuffer();
+    prepareShader();
 
     /* Loop until the user closes the window */
     while (app->update())

@@ -15,6 +15,8 @@ public:
     void setVector3(const std::string& name, float x, float y, float z);
     void setVector3(const std::string& name, const float* values);
 
+    void setInt(const std::string& name, int value);
+
 private:
     // shader program
     // type: compile link

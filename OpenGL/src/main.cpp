@@ -9,7 +9,9 @@ using namespace std;
 
 GLuint vao = 0;
 Shader *shader = nullptr;
-Texture *texture = nullptr;
+Texture *grassTexture = nullptr;
+Texture *landTexture = nullptr;
+Texture *noiseTexture = nullptr;
 
 // declear a function to respond window resize
 void onResize(int width, int height)
@@ -141,7 +143,9 @@ void prepareShader() {
 }
 
 void prepareTexture() {
-    texture = new Texture("assets/textures/caoshen.jpeg", 0);
+    grassTexture = new Texture("assets/textures/grass.jpg", 0);
+    landTexture = new Texture("assets/textures/land.jpeg", 1);
+    noiseTexture = new Texture("assets/textures/noise.jpg", 2);
 }
 
 void render() {
@@ -157,7 +161,9 @@ void render() {
     float color[] = {0.9, 0.3, 0.25};
     shader->setVector3("uColor", color);
 
-    shader->setInt("sampler", 0);
+    shader->setInt("grassSampler", 0);
+    shader->setInt("landSampler", 1);
+    shader->setInt("noiseSampler", 2);
 
     // 2. bind current vao
     GL_CALL(glBindVertexArray(vao));
@@ -195,6 +201,7 @@ int main(void)
 
     app->destroy();
     delete shader;
-    delete texture;
+    delete grassTexture;
+    delete landTexture;
     return 0;
 }

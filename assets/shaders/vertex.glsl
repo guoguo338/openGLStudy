@@ -1,6 +1,7 @@
 #version 410 core
-in vec3 aColor;
+
 in vec3 aPos;
+in vec3 aColor;
 
 uniform float time;
 uniform float speed;

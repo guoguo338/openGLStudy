@@ -12,6 +12,8 @@ public:
     void end(); // end use shadr
 
     void setFloat(const std::string& name, float value);
+    void setVector3(const std::string& name, float x, float y, float z);
+    void setVector3(const std::string& name, const float* values);
 
 private:
     // shader program

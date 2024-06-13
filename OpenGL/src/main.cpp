@@ -132,9 +132,12 @@ void render() {
     shader->begin();
 
     shader->setFloat("time", glfwGetTime());
-    shader->setFloat("speed", 10.0);
+    shader->setFloat("speed", 1.0);
 
-    // 2. bind current vao
+    float color[] = {0.9, 0.3, 0.25};
+    shader->setVector3("uColor", color);
+
+    // 2. bind current vaoe
     GL_CALL(glBindVertexArray(vao));
 
     // 3. send draw call

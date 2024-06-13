@@ -1,16 +1,15 @@
 #include <iostream>
 #include "glFramework/core.h"
 #include "glFramework/shader.h"
+#include "glFramework/texture.h"
 #include "application/application.h"
 #include "wrapper/checkError.h"
-#define STB_IMAGE_IMPLEMENTATION
-#include "application/stb_image.h"
 
 using namespace std;
 
 GLuint vao = 0;
-GLuint texture;
 Shader *shader = nullptr;
+Texture *texture = nullptr;
 
 // declear a function to respond window resize
 void onResize(int width, int height)
@@ -142,38 +141,7 @@ void prepareShader() {
 }
 
 void prepareTexture() {
-    // stbimage read picture
-    int width, height, channels;
-
-    // reverse y-axis
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char * data = stbi_load("assets/textures/caoshen.jpeg", &width, &height, &channels, STBI_rgb_alpha);
-
-    // generate texture and activate unit
-    GL_CALL(glGenTextures(1, &texture));
-    // activate texture unit
-    GL_CALL(glActiveTexture(GL_TEXTURE0));
-    // bind texture object
-    GL_CALL(glBindTexture(GL_TEXTURE_2D, texture));
-    // transfer texture data
-    if (data) {
-        GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
-        // generate mipmap
-        GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
-    } else {
-        std::cerr << "Failed to load texture" << std::endl;
-    }
-
-    // release data
-    stbi_image_free(data);
-
-    // Set texture filter pattern
-    GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-
-    // Set texture package pattern
-    GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-    GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+    texture = new Texture("assets/textures/caoshen.jpeg", 0);
 }
 
 void render() {
@@ -226,5 +194,7 @@ int main(void)
     }
 
     app->destroy();
+    delete shader;
+    delete texture;
     return 0;
 }

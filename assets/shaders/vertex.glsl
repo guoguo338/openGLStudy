@@ -15,5 +15,5 @@ void main()
     float offsetX = sin(time * speed) * dx;
     gl_Position = vec4(aPos.x + offsetX, aPos.y, aPos.z, 1.0);
     color = aColor;
-    uv = aUV;
+    uv = vec2(aUV.x + offsetX, aUV.y);
 }

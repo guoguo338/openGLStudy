@@ -43,24 +43,27 @@ void prepareSingleBuffer() {
     float positions[] = {
             -0.5f, -0.5f, 0.0f,
             0.5f, -0.5f, 0.0f,
-            -0.0f, 0.5f, 0.0f,
-            0.5f, 0.5f,0.0f,
+            -0.5f, 0.5f, 0.0f,
+            0.5f, 0.5f,0.05f,
     };
 
     float colors[] = {
-            1.0f, 0.0f, 0.0f,
+            1.0f,   0.0f,   0.0f,
             0.0f,   1.0f,   0.0f,
-            0.0f,   0.0f,   1.0f
+            0.0f,   0.0f,   1.0f,
+            0.5f,  0.5f,  0.5f
     };
 
     float uvs[] = {
             0.0f, 0.0f,
             1.0f, 0.0f,
-            0.5f, 1.0f,
+            0.0f, 1.0f,
+            1.0f, 1.0f
     };
 
     unsigned int indices[] = {
             0, 1, 2,
+            2, 1, 3
     };
 
     // VBO
@@ -170,7 +173,7 @@ void prepareTexture() {
 
     // Set texture package pattern
     GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-    GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT));
+    GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
 }
 
 void render() {

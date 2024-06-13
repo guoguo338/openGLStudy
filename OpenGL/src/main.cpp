@@ -12,6 +12,7 @@ Shader *shader = nullptr;
 Texture *grassTexture = nullptr;
 Texture *landTexture = nullptr;
 Texture *noiseTexture = nullptr;
+Texture *caoshenTexture = nullptr;
 
 // declear a function to respond window resize
 void onResize(int width, int height)
@@ -146,6 +147,7 @@ void prepareTexture() {
     grassTexture = new Texture("assets/textures/grass.jpg", 0);
     landTexture = new Texture("assets/textures/land.jpeg", 1);
     noiseTexture = new Texture("assets/textures/noise.jpg", 2);
+    caoshenTexture = new Texture("assets/textures/caoshen.jpeg", 3);
 }
 
 void render() {
@@ -164,6 +166,7 @@ void render() {
     shader->setInt("grassSampler", 0);
     shader->setInt("landSampler", 1);
     shader->setInt("noiseSampler", 2);
+    shader->setInt("caoshenSampler", 3);
 
     // 2. bind current vao
     GL_CALL(glBindVertexArray(vao));
@@ -203,5 +206,7 @@ int main(void)
     delete shader;
     delete grassTexture;
     delete landTexture;
+    delete noiseTexture;
+    delete caoshenTexture;
     return 0;
 }

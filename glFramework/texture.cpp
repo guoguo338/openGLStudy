@@ -21,10 +21,20 @@ Texture::Texture(const std::string& path, unsigned int uint) {
     // bind texture object
     GL_CALL(glBindTexture(GL_TEXTURE_2D, mTexture));
     // transfer texture data
+    int width = mWidth, height = mHeight;
     if (data) {
-        GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
+//        GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
+        for (int level = 0; true; ++level) {
+            GL_CALL(glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
+            if (width == 1 && height == 1) {
+                break;
+            }
+
+            width = width > 1 ? width / 2 : 1;
+            height = height > 1 ? height / 2 : 1;
+        }
         // generate mipmap
-        GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
+//        GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
     } else {
         std::cerr << "Failed to load texture" << std::endl;
     }
@@ -34,7 +44,7 @@ Texture::Texture(const std::string& path, unsigned int uint) {
 
     // Set texture filter pattern
     GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+    GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST));
 
     // Set texture package pattern
     GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));

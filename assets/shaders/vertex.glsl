@@ -11,9 +11,9 @@ out vec2 uv;
 
 void main()
 {
-    float dx = 0.3;
-    float offsetX = sin(time * speed) * dx;
-    gl_Position = vec4(aPos.x + offsetX, aPos.y, aPos.z, 1.0);
+    float scale = 1.0 / time * 4.0;
+    vec3 sPos = aPos * scale;
+    gl_Position = vec4(sPos, 1.0);
     color = aColor;
-    uv = vec2(aUV.x + offsetX, aUV.y);
+    uv = aUV;
 }

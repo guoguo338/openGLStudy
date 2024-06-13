@@ -3,10 +3,13 @@
 #include "glFramework/shader.h"
 #include "application/application.h"
 #include "wrapper/checkError.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "application/stb_image.h"
 
 using namespace std;
 
 GLuint vao = 0;
+GLuint texture;
 Shader *shader = nullptr;
 
 // declear a function to respond window resize
@@ -120,8 +123,30 @@ void prepareInterleavedBuffer() {
     GL_CALL(glBindVertexArray(0));
 }
 
-void prepareShader(){
+void prepareShader() {
     shader = new Shader("assets/shaders/vertex.glsl", "assets/shaders/fragment.glsl");
+}
+
+void prepareTexture() {
+    // stbimage read picture
+    int width, height, channels;
+
+    // reverse y-axis
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char * data = stbi_load("assets/textures/caoshen.jpeg", &width, &height, &channels, STBI_rgb_alpha);
+
+    // generate texture and activate unit
+    glGenTextures(1, &texture);
+    // activate texture unit
+    glActiveTexture(GL_TEXTURE0);
+    // bind texture object
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    // transfer texture data
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+    // release data
+    stbi_image_free(data);
 }
 
 void render() {
@@ -161,6 +186,7 @@ int main(void)
     GL_CALL(glClearColor(0.2f, 0.3f, 0.3f, 1.0f));
 
     prepareShader();
+    prepareTexture();
 //    prepareInterleavedBuffer();
     prepareSingleBuffer();
 

@@ -132,6 +132,7 @@ void render() {
     shader->begin();
 
     shader->setFloat("time", glfwGetTime());
+    shader->setFloat("speed", 10.0);
 
     // 2. bind current vao
     GL_CALL(glBindVertexArray(vao));

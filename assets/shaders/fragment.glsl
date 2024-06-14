@@ -6,14 +6,17 @@ uniform sampler2D landSampler;
 uniform sampler2D noiseSampler;
 uniform sampler2D caoshenSampler;
 
+uniform float width;
+uniform float height;
+
 in vec3 color;
 in vec2 uv;
 
 void main()
 {
-    vec4 grassColor = texture(grassSampler, uv);
-    vec4 landColor = texture(landSampler, uv);
-    vec4 noiseColor = texture(noiseSampler, uv);
+//    vec4 grassColor = texture(grassSampler, uv);
+//    vec4 landColor = texture(landSampler, uv);
+//    vec4 noiseColor = texture(noiseSampler, uv);
     vec4 caoshenColor = texture(caoshenSampler, uv);
 //    float weight = noiseColor.r;
 ////    vec4 finalColor = grassColor * (1.0 - weight) + landColor * weight;

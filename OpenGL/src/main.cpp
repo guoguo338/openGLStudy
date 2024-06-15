@@ -45,6 +45,14 @@ void onKey(int key, int action, int modes)
     }
 }
 
+void onMouse(int button, int action, int modes) {
+    cout << "mouse clicked:" << button << endl;
+}
+
+void onCursor(double xpos, double ypos) {
+    cout << "mouse moved:" << xpos << ", " << ypos << endl;
+}
+
 void doRotationTransform() {
     // splin along with Z-axis by 45 degrees
     transformMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
@@ -280,6 +288,8 @@ int main(void)
     }
     app->setResizeCallback(onResize);
     app->setKeyCallBack(onKey);
+    app->setMouseCallBack(onMouse);
+    app->setCursorCallBack(onCursor);
 
     // Set openGL view port and clear color
     GL_CALL(glViewport(0, 0, 800, 600));

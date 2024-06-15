@@ -9,6 +9,8 @@ class GLFWwindow;
 
 using ResizeCallback = void(*)(int width, int height);
 using KeyCallBack = void(*)(int key, int action, int modes);
+using MouseCallBack = void(*)(int button, int action, int modes);
+using CursorCallBack = void(*)(double xpos, double ypos);
 
 class Application {
 public:
@@ -24,9 +26,13 @@ public:
 
     void setResizeCallback(ResizeCallback callback) {mResizeCallback = callback;}
     void setKeyCallBack(KeyCallBack callback) {mKeyCallBack = callback;}
+    void setMouseCallBack(MouseCallBack callback) {mMouseCallBack = callback;}
+    void setCursorCallBack(CursorCallBack callback) {mCursorCallBack = callback;}
 
     static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
     static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int modes);
+    static void mouseCallback(GLFWwindow *window, int button, int action, int modes);
+    static void cursorCallback(GLFWwindow *window, double xpos, double ypos);
 
     uint32_t getWidth() const {return mWidth;}
     uint32_t getHeight() const {return mHeight;}
@@ -39,5 +45,7 @@ private:
 
     ResizeCallback mResizeCallback;
     KeyCallBack mKeyCallBack;
+    MouseCallBack mMouseCallBack;
+    CursorCallBack mCursorCallBack;
     Application();
 };

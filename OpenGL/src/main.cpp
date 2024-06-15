@@ -55,11 +55,18 @@ void doScaleTransform() {
     transformMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 1.0));
 }
 
+void preTransform() {
+    transformMatrix = glm::scale(transformMatrix, glm::vec3(0.5, 0.5, 1.0));
+}
+
 void doTransform() {
-    glm::mat4 rotateMat = glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0.0, 0.0, 1.0));
-    glm::mat4 transMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f));
-    // rotate then translate
-    transformMatrix = transMat * rotateMat;
+//    float angle = 0.25f;
+//    transformMatrix = glm::rotate(transformMatrix, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
+
+//    float angle = 45.0f;
+//    transformMatrix = glm::rotate(transformMatrix, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
+//    transformMatrix = glm::translate(transformMatrix, glm::vec3(0.001f, 0.0f, 0.0f));
+    transformMatrix = glm::translate(transformMatrix, glm::vec3(0.001f, 0.0f, 0.0f));
 }
 
 float angle = 0.0f;
@@ -180,8 +187,6 @@ void prepareTexture() {
 }
 
 void render() {
-    doRotation();
-
     // clear buffer
     GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
 
@@ -258,8 +263,10 @@ int main(void)
 //    doTransform();
 
     /* Loop until the user closes the window */
+    preTransform();
     while (app->update())
     {
+        doTransform();
         // render
         render();
     }

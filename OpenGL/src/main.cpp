@@ -15,6 +15,7 @@ Texture *noiseTexture = nullptr;
 Texture *caoshenTexture = nullptr;
 glm::mat4 transformMatrix(1.0);
 glm::mat4 viewMatrix(1.0);
+glm::mat4 orthoMatrix(1.0);
 
 // declear a function to respond window resize
 void onResize(int width, int height)
@@ -75,8 +76,10 @@ void prepareCamera() {
     // eye: current camera location
     // center: the point current camera look at
     // up: roof vector of camera
-    viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, -0.5f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
+
+void prepareOtho();
 
 float angle = 0.0f;
 void doRotation() {
@@ -87,11 +90,17 @@ void doRotation() {
 }
 
 void prepareSingleBuffer() {
+//    float positions[] = {
+//            -0.5f, -0.5f, 0.0f,
+//            0.5f, -0.5f, 0.0f,
+//            -0.5f, 0.5f, 0.0f,
+//            0.5f, 0.5f,0.05f,
+//    };
     float positions[] = {
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            -0.5f, 0.5f, 0.0f,
-            0.5f, 0.5f,0.05f,
+            -1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            1.0f, 1.0f,1.0f,
     };
 
     float colors[] = {
@@ -110,7 +119,7 @@ void prepareSingleBuffer() {
 
     unsigned int indices[] = {
             0, 1, 2,
-            2, 1, 3
+//            2, 1, 3
     };
 
     // VBO
@@ -195,6 +204,10 @@ void prepareTexture() {
     caoshenTexture = new Texture("assets/textures/caoshen.jpeg", 3);
 }
 
+void prepareOtho() {
+    orthoMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, 2.0f, -2.0f);
+}
+
 void render() {
     // clear buffer
     GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
@@ -212,6 +225,7 @@ void render() {
 
     shader->setMarix4x4("transform", transformMatrix);
     shader->setMarix4x4("viewMatrix", viewMatrix);
+    shader->setMarix4x4("projectionMatrix", orthoMatrix);
 
     // 2. bind current vao
     GL_CALL(glBindVertexArray(vao));
@@ -270,6 +284,7 @@ int main(void)
     prepareSingleBuffer();
     prepareShader();
     prepareCamera();
+    prepareOtho();
 
 //    doTransform();
 

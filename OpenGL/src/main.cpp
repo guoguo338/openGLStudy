@@ -13,6 +13,7 @@ Texture *grassTexture = nullptr;
 Texture *landTexture = nullptr;
 Texture *noiseTexture = nullptr;
 Texture *caoshenTexture = nullptr;
+glm::mat4 transformMatrix(1.0);
 
 // declear a function to respond window resize
 void onResize(int width, int height)
@@ -39,6 +40,11 @@ void onKey(int key, int action, int modes)
     {
         cout << "key control pressed: " << endl;
     }
+}
+
+void doTransform() {
+    // splin along with Z-axis by 45 degrees
+    transformMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
 }
 
 void prepareSingleBuffer() {
@@ -157,9 +163,6 @@ void render() {
     // 1. bind current program
     shader->begin();
 
-    shader->setFloat("time", glfwGetTime());
-    shader->setFloat("speed", 1.0);
-
     float color[] = {0.9, 0.3, 0.25};
     shader->setVector3("uColor", color);
 
@@ -167,6 +170,8 @@ void render() {
     shader->setInt("landSampler", 1);
     shader->setInt("noiseSampler", 2);
     shader->setInt("caoshenSampler", 3);
+
+    shader->setMarix4x4("transform", transformMatrix);
 
     // 2. bind current vao
     GL_CALL(glBindVertexArray(vao));
@@ -181,6 +186,36 @@ void render() {
 
 int main(void)
 {
+    // Vector
+    glm::vec2 v0(0);
+    glm::vec3 v1(0);
+    glm::vec4 v2(0);
+
+    glm::vec4 vadd = v2 + glm::vec4(0);
+    auto mul = vadd * v2;  // multiply each element and put to corresponding position
+    auto dotRes = glm::dot(vadd, v2);
+    glm::vec3 vt0, vt1;
+    auto crossRes = glm::cross(vt0, vt1);
+
+    // matrix
+    glm::mat4 m0(1.0);
+    glm::mat4 m1 = glm::identity<glm::mat4>();
+    glm::mat2 mm2(1.0);
+    glm::mat3 mm3(1.0);
+    glm::mat2x3 mm4(1.0);
+
+    auto madd = m0 + m1;
+    auto mmulti = m0 * m1;
+    auto res = m0 * v2;
+
+    // transpose
+    auto transMat = glm::transpose(madd);
+
+    // inverse
+    auto inverseMat = glm::inverse(madd);
+
+    cout << glm::to_string(mm4) << endl;
+
     if (!app->init(800, 600)) {
         return -1;
     }
@@ -194,6 +229,8 @@ int main(void)
     prepareTexture();
     prepareSingleBuffer();
     prepareShader();
+
+    doTransform();
 
     /* Loop until the user closes the window */
     while (app->update())

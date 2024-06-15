@@ -118,3 +118,8 @@ void Shader::setInt(const std::string& name, int value) {
     GLint location = GL_CALL(glGetUniformLocation(mProgram, name.c_str()));
     GL_CALL(glUniform1i(location, value));
 }
+
+void Shader::setMarix4x4(const std::string& name, glm::mat4 value) {
+    GLint location = GL_CALL(glGetUniformLocation(mProgram, name.c_str()));
+    GL_CALL(glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value)));
+}

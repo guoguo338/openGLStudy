@@ -17,6 +17,8 @@ public:
 
     void setInt(const std::string& name, int value);
 
+    void setMarix4x4(const std::string& name, glm::mat4 value);
+
 private:
     // shader program
     // type: compile link

@@ -10,6 +10,7 @@ file(COPY ${ASSETS} DESTINATION ${CMAKE_BINARY_DIR})
 
 include_directories(${PROJECT_SOURCE_DIR}/Dependencies/GLFW/include)
 include_directories(${PROJECT_SOURCE_DIR}/Dependencies/glad/include)
+include_directories(${PROJECT_SOURCE_DIR}/Dependencies/)
 include_directories(${PROJECT_SOURCE_DIR})
 link_directories(${PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-arm64)
 

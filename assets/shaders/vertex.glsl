@@ -4,16 +4,17 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aColor;
 layout (location = 2) in vec2 aUV;
 
-uniform float time;
-uniform float speed;
 out vec3 color;
 out vec2 uv;
 
+uniform mat4 transform;
+
+// aPos as attribute sent to shader, is immutable
 void main()
 {
-    float scale = 1.0 / time * 4.0;
-    vec3 sPos = aPos * scale;
-    gl_Position = vec4(sPos, 1.0);
+    vec4 position = vec4(aPos, 1.0);
+    position = transform * position;
+    gl_Position = position;
     color = aColor;
     uv = aUV;
 }

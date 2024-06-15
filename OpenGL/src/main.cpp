@@ -42,9 +42,32 @@ void onKey(int key, int action, int modes)
     }
 }
 
-void doTransform() {
+void doRotationTransform() {
     // splin along with Z-axis by 45 degrees
     transformMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+}
+
+void doTranslationTransform() {
+    transformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f));
+}
+
+void doScaleTransform() {
+    transformMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 1.0));
+}
+
+void doTransform() {
+    glm::mat4 rotateMat = glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0.0, 0.0, 1.0));
+    glm::mat4 transMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f));
+    // rotate then translate
+    transformMatrix = transMat * rotateMat;
+}
+
+float angle = 0.0f;
+void doRotation() {
+    angle += 0.5f;
+    // each frame, refresh another rotate matrix
+    glm::mat4 rotateMat = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
+    transformMatrix = rotateMat;
 }
 
 void prepareSingleBuffer() {
@@ -157,6 +180,8 @@ void prepareTexture() {
 }
 
 void render() {
+    doRotation();
+
     // clear buffer
     GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
 
@@ -230,7 +255,7 @@ int main(void)
     prepareSingleBuffer();
     prepareShader();
 
-    doTransform();
+//    doTransform();
 
     /* Loop until the user closes the window */
     while (app->update())

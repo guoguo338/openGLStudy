@@ -16,6 +16,7 @@ Texture *caoshenTexture = nullptr;
 glm::mat4 transformMatrix(1.0);
 glm::mat4 viewMatrix(1.0);
 glm::mat4 orthoMatrix(1.0);
+glm::mat4 perspectiveMatrix(1.0);
 
 // declear a function to respond window resize
 void onResize(int width, int height)
@@ -76,7 +77,7 @@ void prepareCamera() {
     // eye: current camera location
     // center: the point current camera look at
     // up: roof vector of camera
-    viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void prepareOtho();
@@ -208,6 +209,10 @@ void prepareOtho() {
     orthoMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, 2.0f, -2.0f);
 }
 
+void preparePerspective() {
+    perspectiveMatrix = glm::perspective(glm::radians(60.0f), (float)app->getWidth() / (float)app->getHeight(), 0.1f, 1000.0f);
+}
+
 void render() {
     // clear buffer
     GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
@@ -225,7 +230,7 @@ void render() {
 
     shader->setMarix4x4("transform", transformMatrix);
     shader->setMarix4x4("viewMatrix", viewMatrix);
-    shader->setMarix4x4("projectionMatrix", orthoMatrix);
+    shader->setMarix4x4("projectionMatrix", perspectiveMatrix);
 
     // 2. bind current vao
     GL_CALL(glBindVertexArray(vao));
@@ -284,7 +289,7 @@ int main(void)
     prepareSingleBuffer();
     prepareShader();
     prepareCamera();
-    prepareOtho();
+    preparePerspective();
 
 //    doTransform();
 

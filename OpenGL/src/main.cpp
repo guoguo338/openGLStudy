@@ -14,6 +14,7 @@ Texture *landTexture = nullptr;
 Texture *noiseTexture = nullptr;
 Texture *caoshenTexture = nullptr;
 glm::mat4 transformMatrix(1.0);
+glm::mat4 viewMatrix(1.0);
 
 // declear a function to respond window resize
 void onResize(int width, int height)
@@ -56,7 +57,7 @@ void doScaleTransform() {
 }
 
 void preTransform() {
-    transformMatrix = glm::scale(transformMatrix, glm::vec3(0.5, 0.5, 1.0));
+//    transformMatrix = glm::scale(transformMatrix, glm::vec3(0.5, 0.5, 1.0));
 }
 
 void doTransform() {
@@ -66,7 +67,15 @@ void doTransform() {
 //    float angle = 45.0f;
 //    transformMatrix = glm::rotate(transformMatrix, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
 //    transformMatrix = glm::translate(transformMatrix, glm::vec3(0.001f, 0.0f, 0.0f));
-    transformMatrix = glm::translate(transformMatrix, glm::vec3(0.001f, 0.0f, 0.0f));
+//    transformMatrix = glm::translate(transformMatrix, glm::vec3(0.001f, 0.0f, 0.0f));
+}
+
+void prepareCamera() {
+    // look at
+    // eye: current camera location
+    // center: the point current camera look at
+    // up: roof vector of camera
+    viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, -0.5f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 float angle = 0.0f;
@@ -202,6 +211,7 @@ void render() {
     shader->setInt("caoshenSampler", 3);
 
     shader->setMarix4x4("transform", transformMatrix);
+    shader->setMarix4x4("viewMatrix", viewMatrix);
 
     // 2. bind current vao
     GL_CALL(glBindVertexArray(vao));
@@ -259,6 +269,7 @@ int main(void)
     prepareTexture();
     prepareSingleBuffer();
     prepareShader();
+    prepareCamera();
 
 //    doTransform();
 

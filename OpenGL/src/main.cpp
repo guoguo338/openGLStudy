@@ -214,9 +214,14 @@ void prepareTexture() {
     caoshenTexture = new Texture("assets/textures/caoshen.jpeg", 3);
 }
 
+void prepareState() {
+    GL_CALL(glEnable(GL_DEPTH_TEST));
+    GL_CALL(glDepthFunc(GL_LESS));
+}
+
 void render() {
     // clear buffer
-    GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
+    GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
     // 1. bind current program
     shader->begin();
@@ -268,6 +273,7 @@ int main(void)
     prepareSingleBuffer();
     prepareShader();
     prepareCamera();
+    prepareState();
 
     /* Loop until the user closes the window */
     preTransform();

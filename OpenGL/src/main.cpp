@@ -5,7 +5,7 @@
 #include "application/application.h"
 #include "wrapper/checkError.h"
 #include "application/camera/perspectiveCamera.h"
-#include "application/camera/cameraControl.h"
+#include "application/camera/trackBallCameraController.h"
 
 using namespace std;
 
@@ -16,12 +16,9 @@ Texture *landTexture = nullptr;
 Texture *noiseTexture = nullptr;
 Texture *caoshenTexture = nullptr;
 glm::mat4 transformMatrix(1.0);
-glm::mat4 viewMatrix(1.0);
-glm::mat4 orthoMatrix(1.0);
-glm::mat4 perspectiveMatrix(1.0);
 
 PerspectiveCamera* camera = nullptr;
-CameraControl* cameraControl = nullptr;
+TrackBallCameraController* cameraControl = nullptr;
 
 // declear a function to respond window resize
 void onResize(int width, int height)
@@ -43,7 +40,7 @@ void onMouse(int button, int action, int modes) {
 }
 
 void onCursor(double xpos, double ypos) {
-    cameraControl->onCurcor(xpos, ypos);
+    cameraControl->onCursor(xpos, ypos);
 }
 
 void doRotationTransform() {
@@ -75,23 +72,10 @@ void doTransform() {
 
 void prepareCamera() {
     camera = new PerspectiveCamera(60.0f, (float)app->getWidth() / (float)app->getHeight(), 0.1f, 1000.0f);
-    cameraControl = new CameraControl();
+    cameraControl = new TrackBallCameraController();
     cameraControl->setCamera(camera);
-
-    // look at
-    // eye: current camera location
-    // center: the point current camera look at
-    // up: roof vector of camera
-    viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
-void prepareOtho() {
-    orthoMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, 2.0f, -2.0f);
-}
-
-void preparePerspective() {
-    perspectiveMatrix = glm::perspective(glm::radians(60.0f), (float)app->getWidth() / (float)app->getHeight(), 0.1f, 1000.0f);
-}
 
 float angle = 0.0f;
 void doRotation() {
@@ -109,9 +93,9 @@ void prepareSingleBuffer() {
 //            0.5f, 0.5f,0.05f,
 //    };
     float positions[] = {
-            -1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
+            -1.0f, -1.0f, 0.0f,
+            1.0f, -1.0f, 0.0f,
+            -1.0f, 1.0f, 0.0f,
             1.0f, 1.0f,1.0f,
     };
 
@@ -131,7 +115,7 @@ void prepareSingleBuffer() {
 
     unsigned int indices[] = {
             0, 1, 2,
-//            2, 1, 3
+            2, 1, 3
     };
 
     // VBO
@@ -232,8 +216,8 @@ void render() {
     shader->setInt("caoshenSampler", 3);
 
     shader->setMarix4x4("transform", transformMatrix);
-    shader->setMarix4x4("viewMatrix", viewMatrix);
-    shader->setMarix4x4("projectionMatrix", perspectiveMatrix);
+    shader->setMarix4x4("viewMatrix", camera->getViewMatrix());
+    shader->setMarix4x4("projectionMatrix", camera->getProjectionMatrix());
 
     // 2. bind current vao
     GL_CALL(glBindVertexArray(vao));
@@ -294,9 +278,6 @@ int main(void)
     prepareSingleBuffer();
     prepareShader();
     prepareCamera();
-    preparePerspective();
-
-//    doTransform();
 
     /* Loop until the user closes the window */
     preTransform();

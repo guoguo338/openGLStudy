@@ -27,7 +27,7 @@ void CameraControl::onMouse(int button, int action, double xpos, double ypos) {
 
 }
 
-void CameraControl::onCurcor(double xpos, double ypos) {
+void CameraControl::onCursor(double xpos, double ypos) {
     std::cout << "onCurcor" << std::endl;
 }
 

@@ -10,7 +10,7 @@ public:
     ~CameraControl();
 
     virtual void onMouse(int button, int action, double xpos, double ypos);
-    virtual void onCurcor(double xpos, double ypos);
+    virtual void onCursor(double xpos, double ypos);
     virtual void onKey(int key, int action, int mods);
 
     virtual void update();
@@ -26,7 +26,7 @@ protected:
     float mCurrentX = 0.0f;
     float mCurrentY = 0.0f;
 
-    float mSensitivity = 0.2f;
+    float mSensitivity = 0.6f;
     std::map<int, bool> mKeyMap;
 
     Camera *mCamera = nullptr;

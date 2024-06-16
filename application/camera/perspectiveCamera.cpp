@@ -15,5 +15,5 @@ PerspectiveCamera::~PerspectiveCamera() {
 }
 
 glm::mat4 PerspectiveCamera::getProjectionMatrix() {
-    glm::perspective(glm::radians(mFovy), mAspect, mNear, mFar);
+    return glm::perspective(glm::radians(mFovy), mAspect, mNear, mFar);
 }

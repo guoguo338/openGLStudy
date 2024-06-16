@@ -36,3 +36,29 @@ void GameCameraControl::yaw(float angle) {
     mCamera->mUp = mat * glm::vec4(mCamera->mUp, 0.0f);
     mCamera->mRight = mat * glm::vec4(mCamera->mRight, 0.0f);
 }
+
+void GameCameraControl::update() {
+    glm::vec3 direction(0.0f);
+
+    auto front = glm::cross(mCamera->mUp, mCamera->mRight);
+    auto right = mCamera->mRight;
+
+    if (mKeyMap[GLFW_KEY_W]) {
+        direction += front;
+    }
+    if (mKeyMap[GLFW_KEY_S]) {
+        direction -= front;
+    }
+    if (mKeyMap[GLFW_KEY_A]) {
+        direction -= right;
+    }
+    if (mKeyMap[GLFW_KEY_D]) {
+        direction += right;
+    }
+
+    if (glm::length(direction) != 0) {
+        direction = glm::normalize(direction);
+        mCamera->mPosition += direction * mSpeed;
+    }
+}
+

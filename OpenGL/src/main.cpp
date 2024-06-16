@@ -17,7 +17,9 @@ Texture *grassTexture = nullptr;
 Texture *landTexture = nullptr;
 Texture *noiseTexture = nullptr;
 Texture *caoshenTexture = nullptr;
-glm::mat4 transformMatrix(1.0);
+Texture *lufeiTexture = nullptr;
+glm::mat4 transformCaoshen(1.0);
+glm::mat4 transformLufei(1.0);
 
 PerspectiveCamera* camera = nullptr;
 //OrghographicCamera* camera = nullptr;
@@ -53,29 +55,29 @@ void onScroll(double offset) {
 
 void doRotationTransform() {
     // splin along with Z-axis by 45 degrees
-    transformMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+    transformCaoshen = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
 }
 
 void doTranslationTransform() {
-    transformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f));
+    transformCaoshen = glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f));
 }
 
 void doScaleTransform() {
-    transformMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 1.0));
+    transformCaoshen = glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 1.0));
 }
 
 void preTransform() {
-//    transformMatrix = glm::scale(transformMatrix, glm::vec3(0.5, 0.5, 1.0));
+//    transformCaoshen = glm::scale(transformCaoshen, glm::vec3(0.5, 0.5, 1.0));
 }
 
 void doTransform() {
 //    float angle = 0.25f;
-//    transformMatrix = glm::rotate(transformMatrix, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
+//    transformCaoshen = glm::rotate(transformCaoshen, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
 
 //    float angle = 45.0f;
-//    transformMatrix = glm::rotate(transformMatrix, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
-//    transformMatrix = glm::translate(transformMatrix, glm::vec3(0.001f, 0.0f, 0.0f));
-//    transformMatrix = glm::translate(transformMatrix, glm::vec3(0.001f, 0.0f, 0.0f));
+//    transformCaoshen = glm::rotate(transformCaoshen, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
+//    transformCaoshen = glm::translate(transformCaoshen, glm::vec3(0.001f, 0.0f, 0.0f));
+//    transformCaoshen = glm::translate(transformCaoshen, glm::vec3(0.001f, 0.0f, 0.0f));
 }
 
 void prepareCamera() {
@@ -93,7 +95,7 @@ void doRotation() {
     angle += 0.5f;
     // each frame, refresh another rotate matrix
     glm::mat4 rotateMat = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
-    transformMatrix = rotateMat;
+    transformCaoshen = rotateMat;
 }
 
 void prepareSingleBuffer() {
@@ -208,6 +210,7 @@ void prepareTexture() {
     grassTexture = new Texture("assets/textures/grass.jpg", 0);
     landTexture = new Texture("assets/textures/land.jpeg", 1);
     noiseTexture = new Texture("assets/textures/noise.jpg", 2);
+    lufeiTexture = new Texture("assets/textures/lufei.jpeg", 3);
     caoshenTexture = new Texture("assets/textures/caoshen.jpeg", 3);
 }
 
@@ -226,15 +229,20 @@ void render() {
     shader->setInt("noiseSampler", 2);
     shader->setInt("caoshenSampler", 3);
 
-    shader->setMarix4x4("transform", transformMatrix);
+    shader->setMarix4x4("transform", transformCaoshen);
     shader->setMarix4x4("viewMatrix", camera->getViewMatrix());
     shader->setMarix4x4("projectionMatrix", camera->getProjectionMatrix());
 
     // 2. bind current vao
     GL_CALL(glBindVertexArray(vao));
 
+    caoshenTexture->bind();
     // 3. send draw call
-//    GL_CALL(glDrawArrays(GL_TRIANGLES, 0, 3));
+    GL_CALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+
+    lufeiTexture->bind();
+    transformLufei = glm::translate(glm::mat4(1.0f), glm::vec3(0.8f, 0.0f, -1.0f));
+    shader->setMarix4x4("transform", transformLufei);
     GL_CALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
     GL_CALL(glBindVertexArray(0));
 
@@ -243,36 +251,6 @@ void render() {
 
 int main(void)
 {
-    // Vector
-    glm::vec2 v0(0);
-    glm::vec3 v1(0);
-    glm::vec4 v2(0);
-
-    glm::vec4 vadd = v2 + glm::vec4(0);
-    auto mul = vadd * v2;  // multiply each element and put to corresponding position
-    auto dotRes = glm::dot(vadd, v2);
-    glm::vec3 vt0, vt1;
-    auto crossRes = glm::cross(vt0, vt1);
-
-    // matrix
-    glm::mat4 m0(1.0);
-    glm::mat4 m1 = glm::identity<glm::mat4>();
-    glm::mat2 mm2(1.0);
-    glm::mat3 mm3(1.0);
-    glm::mat2x3 mm4(1.0);
-
-    auto madd = m0 + m1;
-    auto mmulti = m0 * m1;
-    auto res = m0 * v2;
-
-    // transpose
-    auto transMat = glm::transpose(madd);
-
-    // inverse
-    auto inverseMat = glm::inverse(madd);
-
-    cout << glm::to_string(mm4) << endl;
-
     if (!app->init(800, 600)) {
         return -1;
     }

@@ -51,7 +51,6 @@ Texture::~Texture() {
 
 void Texture::bind() {
     if (mTexture != 0) {
-        glActiveTexture(GL_TEXTURE_2D + mUnit);
         GL_CALL(glBindTexture(GL_TEXTURE_2D, mTexture));
     }
 }

@@ -5,6 +5,7 @@ uniform sampler2D grassSampler;
 uniform sampler2D landSampler;
 uniform sampler2D noiseSampler;
 uniform sampler2D caoshenSampler;
+uniform sampler2D lufeiSampler;
 
 uniform float width;
 uniform float height;

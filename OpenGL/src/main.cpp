@@ -53,58 +53,13 @@ void onScroll(double offset) {
     cameraControl->onScroll(offset);
 }
 
-void doRotationTransform() {
-    // splin along with Z-axis by 45 degrees
-    transformCaoshen = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-}
-
-void doTranslationTransform() {
-    transformCaoshen = glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f));
-}
-
-void doScaleTransform() {
-    transformCaoshen = glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 1.0));
-}
-
-void preTransform() {
-//    transformCaoshen = glm::scale(transformCaoshen, glm::vec3(0.5, 0.5, 1.0));
-}
-
-void doTransform() {
-//    float angle = 0.25f;
-//    transformCaoshen = glm::rotate(transformCaoshen, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
-
-//    float angle = 45.0f;
-//    transformCaoshen = glm::rotate(transformCaoshen, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
-//    transformCaoshen = glm::translate(transformCaoshen, glm::vec3(0.001f, 0.0f, 0.0f));
-//    transformCaoshen = glm::translate(transformCaoshen, glm::vec3(0.001f, 0.0f, 0.0f));
-}
-
 void prepareCamera() {
     camera = new PerspectiveCamera(60.0f, (float)app->getWidth() / (float)app->getHeight(), 0.1f, 1000.0f);
-//    float size = 6.0f;
-//    camera = new OrghographicCamera(-size, size, size, -size, size, -size);
-//    cameraControl = new TrackBallCameraController();
     cameraControl = new GameCameraControl();
     cameraControl->setCamera(camera);
 }
 
-
-float angle = 0.0f;
-void doRotation() {
-    angle += 0.5f;
-    // each frame, refresh another rotate matrix
-    glm::mat4 rotateMat = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
-    transformCaoshen = rotateMat;
-}
-
 void prepareSingleBuffer() {
-//    float positions[] = {
-//            -0.5f, -0.5f, 0.0f,
-//            0.5f, -0.5f, 0.0f,
-//            -0.5f, 0.5f, 0.0f,
-//            0.5f, 0.5f,0.05f,
-//    };
     float positions[] = {
             -1.0f, -1.0f, 0.0f,
             1.0f, -1.0f, 0.0f,
@@ -276,10 +231,8 @@ int main(void)
     prepareState();
 
     /* Loop until the user closes the window */
-    preTransform();
     while (app->update())
     {
-        doTransform();
         cameraControl->update();
         // render
         render();

@@ -11,6 +11,7 @@ using ResizeCallback = void(*)(int width, int height);
 using KeyCallBack = void(*)(int key, int action, int modes);
 using MouseCallBack = void(*)(int button, int action, int modes);
 using CursorCallBack = void(*)(double xpos, double ypos);
+using ScrollCallBack = void(*)(double yoffset);
 
 class Application {
 public:
@@ -24,15 +25,17 @@ public:
 
     void destroy();
 
-    void setResizeCallback(ResizeCallback callback) {mResizeCallback = callback;}
-    void setKeyCallBack(KeyCallBack callback) {mKeyCallBack = callback;}
-    void setMouseCallBack(MouseCallBack callback) {mMouseCallBack = callback;}
-    void setCursorCallBack(CursorCallBack callback) {mCursorCallBack = callback;}
+    void setResizeCallback(ResizeCallback callback) { mResizeCallback = callback; }
+    void setKeyCallBack(KeyCallBack callback) { mKeyCallBack = callback; }
+    void setMouseCallBack(MouseCallBack callback) { mMouseCallBack = callback; }
+    void setCursorCallBack(CursorCallBack callback) { mCursorCallBack = callback; }
+    void setScrollCallBack(ScrollCallBack callback) { mScrollCallBack = callback; }
 
     static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
     static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int modes);
     static void mouseCallback(GLFWwindow *window, int button, int action, int modes);
     static void cursorCallback(GLFWwindow *window, double xpos, double ypos);
+    static void scrollCallback(GLFWwindow *window, double xoffset, double xyoffset);
 
     uint32_t getWidth() const {return mWidth;}
     uint32_t getHeight() const {return mHeight;}
@@ -49,5 +52,6 @@ private:
     KeyCallBack mKeyCallBack;
     MouseCallBack mMouseCallBack;
     CursorCallBack mCursorCallBack;
+    ScrollCallBack mScrollCallBack;
     Application();
 };

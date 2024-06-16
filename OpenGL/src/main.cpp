@@ -6,6 +6,7 @@
 #include "wrapper/checkError.h"
 #include "application/camera/perspectiveCamera.h"
 #include "application/camera/trackBallCameraController.h"
+#include "application/camera/orthographicCamera.h"
 
 using namespace std;
 
@@ -17,7 +18,8 @@ Texture *noiseTexture = nullptr;
 Texture *caoshenTexture = nullptr;
 glm::mat4 transformMatrix(1.0);
 
-PerspectiveCamera* camera = nullptr;
+//PerspectiveCamera* camera = nullptr;
+OrghographicCamera* camera = nullptr;
 TrackBallCameraController* cameraControl = nullptr;
 
 // declear a function to respond window resize
@@ -41,6 +43,10 @@ void onMouse(int button, int action, int modes) {
 
 void onCursor(double xpos, double ypos) {
     cameraControl->onCursor(xpos, ypos);
+}
+
+void onScroll(double offset) {
+    cameraControl->onScroll(offset);
 }
 
 void doRotationTransform() {
@@ -71,7 +77,9 @@ void doTransform() {
 }
 
 void prepareCamera() {
-    camera = new PerspectiveCamera(60.0f, (float)app->getWidth() / (float)app->getHeight(), 0.1f, 1000.0f);
+//    camera = new PerspectiveCamera(60.0f, (float)app->getWidth() / (float)app->getHeight(), 0.1f, 1000.0f);
+    float size = 6.0f;
+    camera = new OrghographicCamera(-size, size, size, -size, size, -size);
     cameraControl = new TrackBallCameraController();
     cameraControl->setCamera(camera);
 }
@@ -269,6 +277,7 @@ int main(void)
     app->setKeyCallBack(onKey);
     app->setMouseCallBack(onMouse);
     app->setCursorCallBack(onCursor);
+    app->setScrollCallBack(onScroll);
 
     // Set openGL view port and clear color
     GL_CALL(glViewport(0, 0, 800, 600));

@@ -45,3 +45,7 @@ void TrackBallCameraController::yaw(float angle) {
     mCamera->mRight = mat * mat * glm::vec4(mCamera->mRight, 0.0f);
     mCamera->mPosition = mat * mat * glm::vec4(mCamera->mPosition, 1.0f);
 }
+
+void TrackBallCameraController::onScroll(float offset) {
+    mCamera->scale(mScaleSpeed * offset);
+}

@@ -100,3 +100,7 @@ void Application::cursorCallback(GLFWwindow *window, double xpos, double ypos) {
         self->mCursorCallBack(xpos, ypos);
     }
 }
+
+void Application::getCursorPosition(double* x, double* y) {
+    glfwGetCursorPos(mWindow, x, y);
+}

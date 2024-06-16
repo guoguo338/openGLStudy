@@ -36,6 +36,8 @@ public:
 
     uint32_t getWidth() const {return mWidth;}
     uint32_t getHeight() const {return mHeight;}
+    void getCursorPosition(double* x, double* y);
+
 private:
     static Application *mInstance;
 

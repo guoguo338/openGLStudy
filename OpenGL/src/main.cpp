@@ -4,6 +4,8 @@
 #include "glFramework/texture.h"
 #include "application/application.h"
 #include "wrapper/checkError.h"
+#include "application/camera/perspectiveCamera.h"
+#include "application/camera/cameraControl.h"
 
 using namespace std;
 
@@ -18,6 +20,9 @@ glm::mat4 viewMatrix(1.0);
 glm::mat4 orthoMatrix(1.0);
 glm::mat4 perspectiveMatrix(1.0);
 
+PerspectiveCamera* camera = nullptr;
+CameraControl* cameraControl = nullptr;
+
 // declear a function to respond window resize
 void onResize(int width, int height)
 {
@@ -28,29 +33,17 @@ void onResize(int width, int height)
 // declear a keyboard response function
 void onKey(int key, int action, int modes)
 {
-    if (key == GLFW_KEY_W) {
-        cout << "pressed: " << "w" << endl;
-    }
-    if (action == GLFW_PRESS)
-    {
-        cout << "key pressed: " << endl;
-    }
-    if (action == GLFW_RELEASE)
-    {
-        cout << "key released: " << endl;
-    }
-    if (modes == GLFW_MOD_CONTROL)
-    {
-        cout << "key control pressed: " << endl;
-    }
+    cameraControl->onKey(key, action, modes);
 }
 
 void onMouse(int button, int action, int modes) {
-    cout << "mouse clicked:" << button << endl;
+    double x, y;
+    app->getCursorPosition(&x, &y);
+    cameraControl->onMouse(button, action, x, y);
 }
 
 void onCursor(double xpos, double ypos) {
-    cout << "mouse moved:" << xpos << ", " << ypos << endl;
+    cameraControl->onCurcor(xpos, ypos);
 }
 
 void doRotationTransform() {
@@ -81,6 +74,10 @@ void doTransform() {
 }
 
 void prepareCamera() {
+    camera = new PerspectiveCamera(60.0f, (float)app->getWidth() / (float)app->getHeight(), 0.1f, 1000.0f);
+    cameraControl = new CameraControl();
+    cameraControl->setCamera(camera);
+
     // look at
     // eye: current camera location
     // center: the point current camera look at
@@ -88,7 +85,13 @@ void prepareCamera() {
     viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
-void prepareOtho();
+void prepareOtho() {
+    orthoMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, 2.0f, -2.0f);
+}
+
+void preparePerspective() {
+    perspectiveMatrix = glm::perspective(glm::radians(60.0f), (float)app->getWidth() / (float)app->getHeight(), 0.1f, 1000.0f);
+}
 
 float angle = 0.0f;
 void doRotation() {
@@ -213,14 +216,6 @@ void prepareTexture() {
     caoshenTexture = new Texture("assets/textures/caoshen.jpeg", 3);
 }
 
-void prepareOtho() {
-    orthoMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, 2.0f, -2.0f);
-}
-
-void preparePerspective() {
-    perspectiveMatrix = glm::perspective(glm::radians(60.0f), (float)app->getWidth() / (float)app->getHeight(), 0.1f, 1000.0f);
-}
-
 void render() {
     // clear buffer
     GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
@@ -308,6 +303,7 @@ int main(void)
     while (app->update())
     {
         doTransform();
+        cameraControl->update();
         // render
         render();
     }

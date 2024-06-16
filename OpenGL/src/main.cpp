@@ -7,6 +7,7 @@
 #include "application/camera/perspectiveCamera.h"
 #include "application/camera/trackBallCameraController.h"
 #include "application/camera/orthographicCamera.h"
+#include "application/camera/gameCameraController.h"
 
 using namespace std;
 
@@ -18,9 +19,10 @@ Texture *noiseTexture = nullptr;
 Texture *caoshenTexture = nullptr;
 glm::mat4 transformMatrix(1.0);
 
-//PerspectiveCamera* camera = nullptr;
-OrghographicCamera* camera = nullptr;
-TrackBallCameraController* cameraControl = nullptr;
+PerspectiveCamera* camera = nullptr;
+//OrghographicCamera* camera = nullptr;
+//TrackBallCameraController* cameraControl = nullptr;
+GameCameraControl* cameraControl = nullptr;
 
 // declear a function to respond window resize
 void onResize(int width, int height)
@@ -77,10 +79,11 @@ void doTransform() {
 }
 
 void prepareCamera() {
-//    camera = new PerspectiveCamera(60.0f, (float)app->getWidth() / (float)app->getHeight(), 0.1f, 1000.0f);
-    float size = 6.0f;
-    camera = new OrghographicCamera(-size, size, size, -size, size, -size);
-    cameraControl = new TrackBallCameraController();
+    camera = new PerspectiveCamera(60.0f, (float)app->getWidth() / (float)app->getHeight(), 0.1f, 1000.0f);
+//    float size = 6.0f;
+//    camera = new OrghographicCamera(-size, size, size, -size, size, -size);
+//    cameraControl = new TrackBallCameraController();
+    cameraControl = new GameCameraControl();
     cameraControl->setCamera(camera);
 }
 

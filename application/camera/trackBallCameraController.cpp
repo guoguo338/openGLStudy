@@ -20,10 +20,13 @@ void TrackBallCameraController::onCursor(double xpos, double ypos) {
 
         pitch(-deltaY);
         yaw(-deltaX);
-    }
+    } else if (mRightMouseDown) {
+        //adjust camera parameters
+        float deltaX = (xpos - mCurrentX) * mMovedSpeed;
+        float deltaY = (ypos - mCurrentY) * mMovedSpeed;
 
-    if (mRightMouseDown) {
-
+        mCamera->mPosition += mCamera->mUp * deltaY;
+        mCamera->mPosition -= mCamera->mRight * deltaX;
     }
 
     mCurrentX = xpos;

@@ -12,5 +12,5 @@ public:
     void yaw(float angle);
 
 private:
-
+    float mMovedSpeed = 0.04f;
 };

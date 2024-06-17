@@ -12,8 +12,8 @@ using namespace std;
 
 Geometry* geometry = nullptr;
 Shader *shader = nullptr;
-Texture *caoshenTexture = nullptr;
-glm::mat4 transformCaoshen(1.0);
+Texture *texture = nullptr;
+glm::mat4 transformMatrix(1.0);
 
 PerspectiveCamera* camera = nullptr;
 TrackBallCameraController* cameraControl = nullptr;
@@ -56,7 +56,7 @@ void prepareShader() {
 }
 
 void prepareTexture() {
-    caoshenTexture = new Texture("assets/textures/caoshen.jpeg", 0);
+    texture = new Texture("assets/textures/earth.jpg", 0);
 }
 
 void prepareState() {
@@ -65,7 +65,7 @@ void prepareState() {
 }
 
 void prepareVAO() {
-    geometry = Geometry::createBox(6);
+    geometry = Geometry::createSphere(6);
 }
 
 void render() {
@@ -75,7 +75,7 @@ void render() {
     // 1. bind current program
     shader->begin();
     shader->setInt("caoshenSampler", 0);
-    shader->setMarix4x4("transform", transformCaoshen);
+    shader->setMarix4x4("transform", transformMatrix);
     shader->setMarix4x4("viewMatrix", camera->getViewMatrix());
     shader->setMarix4x4("projectionMatrix", camera->getProjectionMatrix());
 
@@ -122,6 +122,6 @@ int main(void)
 
     app->destroy();
     delete shader;
-    delete caoshenTexture;
+    delete texture;
     return 0;
 }
